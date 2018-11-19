@@ -7,7 +7,8 @@ let mongoose = require('mongoose');
 
 let messageSchema = mongoose.Schema({
     sender: String,
-    message: String
+    message: String,
+    timestamp: String
 })
 
 
@@ -72,7 +73,7 @@ app.get("/messages", (request, response) => {
     Message.find({}, function(err, messages){
          // send the latest 40 messages and the full user list, annotated with active flags
     response.send({ messages: messages.slice(-40), users: usersSimple });
-
+    console.log(messages)
     })
    
 });
