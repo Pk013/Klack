@@ -18,7 +18,7 @@ db.on('error', console.error.bind(console, 'connection error: '));
 let Message = mongoose.model('Message', messageSchema)
 
 // List of all messages
-let messages = [];
+//let messages = [];
 
 // Track last active times for each sender
 let users = {};
@@ -47,8 +47,6 @@ app.get("/messages", (request, response) => {
 
 
     Message.find({}, function(err, messageArray) {
-
-        messages = messageArray
         messageArray.forEach(name => {
             users[name.sender] = name.timestamp
         })
@@ -71,9 +69,12 @@ app.get("/messages", (request, response) => {
 
     // update the requesting user's last access time
     users[request.query.for] = now;
-
-    // send the latest 40 messages and the full user list, annotated with active flags
+    Message.find({}, function(err, messages){
+         // send the latest 40 messages and the full user list, annotated with active flags
     response.send({ messages: messages.slice(-40), users: usersSimple });
+
+    })
+   
 });
 
 app.post("/messages", (request, response) => {
@@ -88,18 +89,18 @@ app.post("/messages", (request, response) => {
     })
 
     messageDBObject.save(function(err, userInfo) {
-        if (err) return
+        if (err) return response.status(500).send()
+        response.status(201)
+    response.send(request.body)
         console.log('this is a message', messageDBObject)
     })
-    messages.push(request.body)
         // append the new message to the message list
 
     // update the posting user's last access timestamp (so we know they are active)
     users[request.body.sender] = timestamp
 
     // Send back the successful response.
-    response.status(201)
-    response.send(request.body)
+   
 })
 
 app.listen(process.env.PORT || 3000, () => {
