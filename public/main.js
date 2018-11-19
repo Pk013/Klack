@@ -1,4 +1,3 @@
-
 const userList = document.getElementById("users");
 const messagesDiv = document.getElementById("messageslist");
 const textarea = document.getElementById("newmessage");
