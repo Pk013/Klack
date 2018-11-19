@@ -3,13 +3,7 @@ const querystring = require("querystring");
 const app = express();
 let mongoose = require('mongoose');
 
-// var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/klack';
-
-const dbName = 'pkShannon';
-const DB_USER = 'Morthos';
-const DB_PASSWORD = 'Kenzie101';
-const DB_URI = 'ds129946.mlab.com:29946'
-
+ let mongoUri = process.env.KLACKCONNECTIONSTRING || 'mongodb://localhost/klack';
 
 let messageSchema = mongoose.Schema({
     sender: String,
@@ -109,5 +103,5 @@ app.post("/messages", (request, response) => {
 })
 
 app.listen(process.env.PORT || 3000, () => {
-    mongoose.connect(`mongodb://${DB_USER}:${DB_PASSWORD}@${DB_URI}/${dbName}`, { useNewUrlParser: true })
+    mongoose.connect(mongoUri, { useNewUrlParser: true })
 })
